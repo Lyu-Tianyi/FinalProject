@@ -14,7 +14,12 @@ from coapthon.messages.response import Response
 from paho import mqtt
 from Gateway.SmtpClientConnector import SmtpClientConnector
 
-
+'''
+This is a coap client on gateway device, using observer to get the cards value from raspberry pi coap server.
+When the new values posted, it will observe by the observer and get the value
+And there are two mqtt client build in this coap client to publish the values of 'command' and 'sum' to ubidots
+There is also a SMTP client to send email to my mailbox
+'''
 
 class GetCardsCoAPClient():
     
@@ -22,21 +27,16 @@ class GetCardsCoAPClient():
     mqttClient = None
     smtpClient = None
     
-    
-    
     coap_port=5683  
-    coap_host="localhost"
-    
-    
-    
-
+    coap_host="127.0.0.1"
     
     def __init__(self):
         
         self.initCoapClient()
         self.initMqttClient()
         self.smtpClient=SmtpClientConnector()
-      
+    
+    #Initialize coap client
     def initCoapClient(self):
         
         try:
@@ -49,17 +49,16 @@ class GetCardsCoAPClient():
  
  
  
-        
+    #Initialize mqtt client
     def initMqttClient(self):
         try:
             
-            self.mqttClient=MqttClientConnector("D:\\git\\repository2\\iot-gateway\\ubidots_cert.pem", self.on_connect, self.on_message, self.on_publish, self.on_subscribe)
+            self.mqttClient=MqttClientConnector("D:\\git\\repository2\\iot-gateway\\ubidots_cert.pem", self.on_connect, self.on_message, self.on_publish_cards, self.on_subscribe)
             print("Created MQTTClient ref......")
             
         except Exception:
             print("Failed to create MQTT CLIENT " + self.mqtt_host)
             pass
-
 
 
 
@@ -85,33 +84,32 @@ class GetCardsCoAPClient():
           
         sum_int = card1_int + card2_int
           
-        if sum_int >= 15:
-            command = "stand"
+        if int(card1)==int(card2):
+            command = 1
         else:
-            if card1_int == card2_int:
-                command = "split"
-            else:
-                command = "hit"
+            command = 0
           
         cardssum = str(sum_int)
           
         
         #Publish CardsCommandData and CardsSumData to cloud 
         self.mqttClient.connect()
-        self.mqttClient.publishMessage("/v1.6/devices/iotfinalproject/command", command, 0)                
-        self.mqttClient.publishMessage("/v1.6/devices/iotfinalproject/sum", cardssum, 0)
+        self.mqttClient.publishMessage("/v1.6/devices/iotfinalproject/command", command, 1)                
+        self.mqttClient.publishMessage("/v1.6/devices/iotfinalproject/sum", cardssum, 1)
         self.mqttClient.disconnect()      
         
            
         #send EmailNotification 
-        self.smtpClient.publishMessage("CardsNotification",command+cardssum)
+        self.smtpClient.publishMessage("CardsNotification",
+                                       "Total sum value: " + cardssum + "/n" +
+                                       "Command value: " + command)
         
         
         print("CoapClient Callback end!!")
         
 
 
-        
+    #GET cards value form the observer from coap server
     def getCardsWithObserver(self,resource):
     
         print("GET for resource: " + resource)
@@ -122,8 +120,6 @@ class GetCardsCoAPClient():
         else:
             print("No response received for GET using resource: " + resource)
             self.coapClient.stop()
-
-
 
 
     #MqttCallBackFunctions

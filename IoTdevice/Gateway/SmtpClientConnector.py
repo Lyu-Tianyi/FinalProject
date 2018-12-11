@@ -8,9 +8,14 @@ from email.mime.text import MIMEText
 import smtplib
 from email.mime.multipart import MIMEMultipart
 
+'''
+This is a simple SMTP connector
+Use for send email to my unique address
+'''
+
 class SmtpClientConnector():
     def __init__(self):
-        print('Configuration data...\n' + str(self.config))
+        print('Configuration data...\n')
         
     def publishMessage(self, topic, data):
         host = "smtp.gmail.com"

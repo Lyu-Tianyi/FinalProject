@@ -3,8 +3,13 @@ Created on Dec 6, 2018
 
 @author: l0t0y
 '''
+
 from coapthon.server.coap import CoAP
 from Device.CoapResourceHandler import CoapResourceHandler
+
+'''
+This is a coap server built on raspberry pi
+'''
 
 class CoapServerConnector(CoAP):
     
@@ -17,12 +22,12 @@ class CoapServerConnector(CoAP):
         self.initResources()
             
     def initResources(self):
-        self.add_resource('test', CoapResourceHandler())
+        self.add_resource('/cards', CoapResourceHandler())
         print("CoAP server initialized. Binding: " + self.ipAddr + ":" + str(self.port))
         print(self.root.dump())
     
 def main():
-    ipAddr = "localhost"
+    ipAddr = "127.0.0.1"
     port = 5683
     useMulticast = False
     coapServer = None

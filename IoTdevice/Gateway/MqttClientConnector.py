@@ -6,15 +6,17 @@ Created on Dec 7, 2018
 from paho.mqtt.client import Client
 import ssl
 
+'''
+This is the mqtt client connector which is working for connecting to the ubidots mqtt broker
+'''
 
 class MqttClientConnector():
-               
 
     _mqttClient=None 
     
     BROKER_ENDPOINT = "things.ubidots.com"
     TLS_PORT = 8883  # Secure port
-    MQTT_USERNAME = "A1E-5VsW5TXS0AK4b0wO0osGIFB5qZWk31"  # Put here your Ubidots TOKEN
+    MQTT_USERNAME = "A1E-5VsW5TXS0AK4b0wO0osGIFB5qZWk31"  # Ubidots TOKEN
     MQTT_PASSWORD = ""  # Leave this in blank
     DEVICE_LABEL = "truck"
     TLS_CERT_PATH = None  # Put here the path of your TLS cert
@@ -90,7 +92,7 @@ def on_subscribe(mqttc, obj, mid, granted_qos):
 
 
 
-# client=MqttClientConnector("C:/Users/Leo/Documents/ubidots_cert.pem", on_connect, on_message, on_publish, on_subscribe)
+# client=MqttClientConnector("D:\\git\\repository2\\iot-gateway\\ubidots_cert.pem", on_connect, on_message, on_publish, on_subscribe)
 # 
 # client.connect()
 # 
