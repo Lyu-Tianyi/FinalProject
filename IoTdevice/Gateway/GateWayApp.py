@@ -13,7 +13,7 @@ Created coap and mqtt clients
 '''
 #Start listening new cards data from device
 getCardsClient=GetCardsCoAPClient()
-getCardsClient.getCardsWithObserver("CardsDataCoapResource")
+getCardsClient.getCardsWithObserver("coap://localhost:5683/cards")
 
 #Start listening new actuator data from cloud
 getActuatorClient=MqttActuatorSubClient()

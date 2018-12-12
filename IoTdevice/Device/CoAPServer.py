@@ -22,12 +22,17 @@ class CoapServerConnector(CoAP):
         self.initResources()
             
     def initResources(self):
-        self.add_resource('/cards', CoapResourceHandler())
+        coapResourceHandler=CoapResourceHandler("TestCoapResource",self)
+        self.add_resource('/cards', coapResourceHandler)
         print("CoAP server initialized. Binding: " + self.ipAddr + ":" + str(self.port))
         print(self.root.dump())
     
+    
+    
 def main():
-    ipAddr = "127.0.0.1"
+    
+    
+    ipAddr = "localhost"
     port = 5683
     useMulticast = False
     coapServer = None

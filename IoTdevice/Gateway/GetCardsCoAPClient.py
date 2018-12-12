@@ -28,7 +28,7 @@ class GetCardsCoAPClient():
     smtpClient = None
     
     coap_port=5683  
-    coap_host="127.0.0.1"
+    coap_host="localhost"
     
     def __init__(self):
         
@@ -113,8 +113,8 @@ class GetCardsCoAPClient():
     def getCardsWithObserver(self,resource):
     
         print("GET for resource: " + resource)
-        #response = self.coapClient.observe(resource, self.callback)
-        response=self.coapClient.observe(resource, self.callback, 10)
+        response = self.coapClient.observe(resource, self.callback)
+        #response=self.coapClient.get(resource, self.callback, 10)
         if response:
             print(response.pretty_print())
         else:
